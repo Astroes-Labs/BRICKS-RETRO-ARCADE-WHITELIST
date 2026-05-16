@@ -1,25 +1,27 @@
 <?php
-
+// File: database/migrations/xxxx_xx_xx_create_achievements_table.php
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
-    /**
-     * Run the migrations.
-     */
+return new class extends Migration {
     public function up(): void
     {
         Schema::create('achievements', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->string('name');
+            $table->string('type');           // e.g., 'puzzle_complete', 'streak_milestone'
+            $table->unsignedInteger('value')->default(0);
+            $table->timestamp('unlocked_at')->nullable();
             $table->timestamps();
+
+            $table->index(['user_id', 'type']);
+            $table->index('unlocked_at');
+            $table->unique(['user_id', 'name']); // Prevent duplicate achievements
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::dropIfExists('achievements');

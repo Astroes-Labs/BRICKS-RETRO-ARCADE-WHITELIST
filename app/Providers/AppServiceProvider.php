@@ -1,9 +1,14 @@
 <?php
 
+// File: app/Providers/AppServiceProvider.php
+
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Schema;
+
+use App\Models\User;
+use App\Observers\UserObserver;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -20,9 +25,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        Schema::defaultStringLength(191); // MySQL shared hosting safety
+        Schema::defaultStringLength(191);
 
-        // Performance: Always load these
-        \View::share('neonGreen', '#B8E1B5FF');
+        User::observe(UserObserver::class);
     }
 }
